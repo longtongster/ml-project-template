@@ -1,18 +1,19 @@
 [tool.poetry]
-name = "microservice"
+name = "ml-project-example"
 version = "0.1.0"
 description = ""
-authors = [" Sacha van Weeren <sacha.van.weeren@gmail.com>"]
+authors = ["Sacha van Weeren <sacha.van.weeren@gmail.com>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.10"
-wikipedia="*" 
-fire="*"
-fastapi="*"
-uvicorn="*"
-textblob="*"
-httpx="*"
+pandas = "*"
+numpy = "*"
+scikit-learn= "*"
+matplotlib = "*"
+seaborn = "*"
+notebook = "*"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
@@ -22,6 +23,8 @@ isort = "*"
 # flake8 = "*"
 pylint = "*"
 mypy = "*"
+mlflow = "*"
+dvc = "*" 
 
 [build-system]
 requires = ["poetry-core"]

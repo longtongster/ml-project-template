@@ -17,9 +17,7 @@ def read_dataset(filename: str) -> pd.DataFrame:
 
     Parameters:
     filename (str): raw data filename
-    drop_columns (List[str]): column names that will be dropped
-    target_column (str): name of target column
-
+    
     Returns:
     pd.Dataframe: Target encoded dataframe
     """
@@ -40,25 +38,43 @@ def get_cat_num_cols(dataset_df: pd.DataFrame, target_col: str) -> Tuple[List[st
     Returns:
     A list of string with categorical columsn and one with numerical column names
     """
+    categorical_columns = dataset_df.select_dtypes(include=["object", "category"]).columns.tolist()
+    numerical_columns = dataset_df.select_dtypes(include=["number"]).columns.tolist()
+    numerical_columns.remove(target_col)
+    
     # Create a boolean mask for categorical columns
-    categorical_mask = dataset_df.dtypes == object
+    # categorical_mask = dataset_df.dtypes == object
 
-    # Get list of categorical column names
-    categorical_columns = dataset_df.columns[categorical_mask].tolist()
+    # # Get list of categorical column names
+    # categorical_columns = dataset_df.columns[categorical_mask].tolist()
     print("The dataframe has the following categorical columns:")
     print(categorical_columns)
 
     # Create a boolean mask for numerical columns
-    numerical_mask = [not x for x in categorical_mask]
+    # numerical_mask = [not x for x in categorical_mask]
 
-    numerical_columns = dataset_df.columns[numerical_mask].tolist()
-    numerical_columns.remove(target_col)
+    # numerical_columns = dataset_df.columns[numerical_mask].tolist()
+    # numerical_columns.remove(target_col)
     print("The dataframe has the following numerical columns")
     print(numerical_columns)
+
+
     return categorical_columns, numerical_columns
 
 
 def get_data_preprocess_pipeline(feature_columns: List[str], categorical_columns: List[str]) -> ColumnTransformer:
+    """
+    Creates a preprocessing pipeline that applies one-hot encoding to categorical
+    features and imputation + scaling to numerical features.
+
+    Parameters:
+    feature_columns (List[str]): List of numerical feature column names
+    categorical_columns (List[str]): List of categorical feature column names
+
+    Returns:
+    ColumnTransformer: A transformer that preprocesses numerical and categorical features
+    differently using pipelines
+    """
     # one-hot-encode categorical features
     print(categorical_columns)
     cat_pipeline = Pipeline([("cat", OneHotEncoder(sparse_output=False, handle_unknown="ignore"))])
@@ -76,6 +92,17 @@ def get_data_preprocess_pipeline(feature_columns: List[str], categorical_columns
 
 
 def process_data(pipeline, data):
+    """
+    Transforms the input data using a fitted pipeline and returns a
+    DataFrame with processed features and appropriate column names.
+
+    Parameters:
+    pipeline: A fitted sklearn ColumnTransformer pipeline
+    data (pd.DataFrame): Input dataframe to transform
+
+    Returns:
+    pd.DataFrame: Transformed dataframe with updated feature names
+    """
     # preprocess the data with fit transform
     X_processed = pipeline.transform(data)
 
@@ -123,8 +150,11 @@ if __name__ == "__main__":
     print(X_train_processed.shape)
     print(X_test_processed.shape)
 
-    X_train_processed.insert(loc=0, column=TARGET_COL, value=y)
-    print(X_train_processed.shape)
+    X_train_processed.insert(loc=0, column=TARGET_COL, value=y_train)
+    print("X_train_processed", X_train_processed.shape)
+
+    X_test_processed.insert(loc=0, column=TARGET_COL, value=y_test)
+    print("X_test_processed", X_test_processed.shape)
 
     # Save preprocessed data
     print("Saving processed train and test datat to `processed_data` directory")

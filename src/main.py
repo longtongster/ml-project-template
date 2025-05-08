@@ -104,7 +104,7 @@ plt.title("Random Forest Regressor Feature Importances (Cross-Validated)")
 plt.gca().invert_yaxis()  # Highest at top
 plt.tight_layout()
 # plt.show()
-plt.savefig("feature_importances.png")  # Save the figure as a PNG image
+plt.savefig("./artifacts/feature_importances.png")  # Save the figure as a PNG image
 
 # Save the fitted pipeline
 joblib.dump(rf_pipeline, "./saved_models/model_pipeline.pkl")

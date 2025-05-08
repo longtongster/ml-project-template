@@ -1,13 +1,13 @@
 from typing import List, Tuple
 
+import joblib
 import pandas as pd
 
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.model_selection import train_test_split
-import joblib
 
 
 def read_dataset(filename: str) -> pd.DataFrame:
@@ -23,12 +23,12 @@ def read_dataset(filename: str) -> pd.DataFrame:
     Returns:
     pd.Dataframe: Target encoded dataframe
     """
-    df = pd.read_csv(filename)
+    dataset_df = pd.read_csv(filename)
 
-    return df
+    return dataset_df
 
 
-def get_cat_num_cols(df: pd.DataFrame, target_col: str) -> Tuple[List[str], List[str]]:
+def get_cat_num_cols(dataset_df: pd.DataFrame, target_col: str) -> Tuple[List[str], List[str]]:
     """
     Takes a dataframe as input and return a list with the categorical
     and numerical columns.
@@ -41,38 +41,38 @@ def get_cat_num_cols(df: pd.DataFrame, target_col: str) -> Tuple[List[str], List
     A list of string with categorical columsn and one with numerical column names
     """
     # Create a boolean mask for categorical columns
-    categorical_mask = df.dtypes == object
+    categorical_mask = dataset_df.dtypes == object
 
     # Get list of categorical column names
-    categorical_columns = df.columns[categorical_mask].tolist()
+    categorical_columns = dataset_df.columns[categorical_mask].tolist()
     print("The dataframe has the following categorical columns:")
     print(categorical_columns)
 
     # Create a boolean mask for numerical columns
     numerical_mask = [not x for x in categorical_mask]
 
-    numerical_columns = df.columns[numerical_mask].tolist()
+    numerical_columns = dataset_df.columns[numerical_mask].tolist()
     numerical_columns.remove(target_col)
     print("The dataframe has the following numerical columns")
     print(numerical_columns)
     return categorical_columns, numerical_columns
 
 
-def get_data_preprocess_pipeline(feature_cols: List[str], categorical_cols: List[str]) -> ColumnTransformer:
+def get_data_preprocess_pipeline(feature_columns: List[str], categorical_columns: List[str]) -> ColumnTransformer:
     # one-hot-encode categorical features
-    print(categorical_cols)
+    print(categorical_columns)
     cat_pipeline = Pipeline([("cat", OneHotEncoder(sparse_output=False, handle_unknown="ignore"))])
 
     # impute and scale numerical features
     num_pipeline = Pipeline([("imputer", SimpleImputer(fill_value=0)), ("scaler", StandardScaler())])
 
     # The column transformer preprocesses the numerical and categorical features differently
-    preprocessor = ColumnTransformer(
-        transformers=[("num", num_pipeline, feature_cols), ("cat", cat_pipeline, categorical_cols)],
+    processor = ColumnTransformer(
+        transformers=[("num", num_pipeline, feature_columns), ("cat", cat_pipeline, categorical_columns)],
         remainder="passthrough",
     )
 
-    return preprocessor
+    return processor
 
 
 def process_data(pipeline, data):
@@ -105,10 +105,10 @@ if __name__ == "__main__":
     print(X_train.shape, X_test.shape)
 
     # get categorical and numerical columns
-    categorical_columns, feature_columns = get_cat_num_cols(df, TARGET_COL)
+    categorical_cols, feature_cols = get_cat_num_cols(df, TARGET_COL)
 
     # The preprocessor defines separate steps for categorical and features columns
-    preprocessor = get_data_preprocess_pipeline(feature_columns, categorical_columns)
+    preprocessor = get_data_preprocess_pipeline(feature_cols, categorical_cols)
 
     # Fit the preprocessor on the training data
     preprocessor.fit(X_train)
@@ -132,5 +132,5 @@ if __name__ == "__main__":
     pd.DataFrame(X_test_processed).to_csv("./processed_data/test_processed.csv", index=False)
 
     # Save the preprocessor pipeline
-    print("Saving the sklearn preprocessing pipeline to `artificats`")
+    print("Saving the sklearn preprocessing pipeline to `artifacts`")
     joblib.dump(preprocessor, "./artifacts/preprocessor.pkl")

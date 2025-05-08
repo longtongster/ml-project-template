@@ -14,6 +14,8 @@ scikit-learn= "*"
 matplotlib = "*"
 seaborn = "*"
 notebook = "*"
+xgboost = "*"
+requests = "^2.32.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"

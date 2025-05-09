@@ -18,4 +18,20 @@ In python is mainly used to quickly execute commands that are often used. For ex
 
 ## Formatter
 
-In the `Makefile` we have `make format` that executes
+In the `Makefile` we have `make format` that executes `poetry run black ./src/*.py`. This will check the code and make adjustments to make the formatting consistent.
+
+## Type-checking:
+
+For this the `mypi` library is used. In the `Makefile` we `make type-checking`. This run `poetry run mypy ./src/*.py`. This will check the `src` directory pythong files type hints
+
+## Import sorting:
+
+For this the `isort` library is used. In the `Makefile` the import sorting is executed via `make sort` this will run `poetry run isort ./src/*.py`.
+
+
+## Linting:
+
+For this the `pylint` library is used. In the `Makefile` this is performed via `make lint`. This will run `poetry run pylint --disable=R,C ./src/*.py`. The `--disable=R,C` means that the following is skipped. 
+
+-   R: Refactor suggestions (e.g., "too many nested blocks").
+-   C: Convention issues (e.g., naming style not matching PEP8).

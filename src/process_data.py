@@ -17,7 +17,7 @@ def read_dataset(filename: str) -> pd.DataFrame:
 
     Parameters:
     filename (str): raw data filename
-    
+
     Returns:
     pd.Dataframe: Target encoded dataframe
     """
@@ -41,7 +41,7 @@ def get_cat_num_cols(dataset_df: pd.DataFrame, target_col: str) -> Tuple[List[st
     categorical_columns = dataset_df.select_dtypes(include=["object", "category"]).columns.tolist()
     numerical_columns = dataset_df.select_dtypes(include=["number"]).columns.tolist()
     numerical_columns.remove(target_col)
-    
+
     # Create a boolean mask for categorical columns
     # categorical_mask = dataset_df.dtypes == object
 
@@ -57,7 +57,6 @@ def get_cat_num_cols(dataset_df: pd.DataFrame, target_col: str) -> Tuple[List[st
     # numerical_columns.remove(target_col)
     print("The dataframe has the following numerical columns")
     print(numerical_columns)
-
 
     return categorical_columns, numerical_columns
 

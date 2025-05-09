@@ -28,7 +28,6 @@ For this the `mypi` library is used. In the `Makefile` we `make type-checking`. 
 
 For this the `isort` library is used. In the `Makefile` the import sorting is executed via `make sort` this will run `poetry run isort ./src/*.py`.
 
-
 ## Linting:
 
 For this the `pylint` library is used. In the `Makefile` this is performed via `make lint`. This will run `poetry run pylint --disable=R,C ./src/*.py`. The `--disable=R,C` means that the following is skipped. 

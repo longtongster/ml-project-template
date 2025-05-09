@@ -26,16 +26,31 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v4
 
+      # install the python version we want to use. NOTE: this is a rather old python version
       - name: Set up Python 3.10.16
         uses: actions/setup-python@v4
         with:
           python-version: '3.10.16'
-
+          
+      # Install pipx 
       - name: Install pipx (needed for Poetry)
         run: python -m pip install --user pipx && python -m pipx ensurepath
 
+      # Install poetry which we use for dependency management. 
       - name: Install Poetry
         run: pipx install poetry
+
+      # Install the dependencies we need (e.g. pandas, scikit-learn)
+      - name: Install dependencies
+        run: |
+          make install
+
+      # Run the linter to make sure the code is PEP compliant
+      - name: Lint with pylint
+        run: |
+          make lint
+
+
 
       # Runs a single command using the runners shell
       - name: list directory

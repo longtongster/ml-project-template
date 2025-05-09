@@ -91,7 +91,7 @@ def get_data_preprocess_pipeline(feature_columns: List[str], categorical_columns
     return processor
 
 
-def process_data(pipeline, data):
+def process_data(pipeline: Pipeline, data: pd.DataFrame) -> Pipeline:
     """
     Transforms the input data using a fitted pipeline and returns a
     DataFrame with processed features and appropriate column names.

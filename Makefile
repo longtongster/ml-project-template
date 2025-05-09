@@ -11,6 +11,10 @@ format-diff:
 	# black executes a dry run to show changes in code (not changing the files though)
 	poetry run black --diff *.py
 
+type-checking:
+	# mypy executes type checking
+	poetry run mypy ./src/*.py
+
 sort:
 	poetry run isort ./src/*.py
 

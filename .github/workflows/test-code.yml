@@ -50,6 +50,15 @@ jobs:
         run: |
           make lint
 
+      # Format the code using black
+      - name: Format with black
+        run: |
+          make format
+          
+      # Type check the code using mypy
+      - name: Format with black
+        run: |
+          make type-checking
 
 
       # Runs a single command using the runners shell

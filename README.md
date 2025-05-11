@@ -1,10 +1,17 @@
 # Introduction 
 
-An example repo that uses poetry, developer tools like pylint/black/mypy but also mlflow and dvc.
+A template for an ml project. 
 
-The repo will use a Makeile to quickly execute repeated tasks.
+Basic examples will be provided on tools that are used such as:
 
-Everything will be containerized
+- poetry for dependency management
+- developer tools like pylint/black/mypy
+- mlflow for experiment tracking
+- dvc for data versioning and pipeline
+
+A Makefile to quickly execute repeated tasks.
+
+Everything will be containerized.
 
 ## Poetry
 

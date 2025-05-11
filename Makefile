@@ -23,9 +23,9 @@ lint:
 	# poetry run pylint --disable=R,C *.py # mylib/*.py
 	poetry run pylint --disable=R,C ./src/*.py
 
-test:
+tests:
 	# test
-	poetry run pytest -vv --cov=src --cov=main test_*.py
+	poetry run pytest -vv --cov=src ./tests/*.py
 
 process-data:
 	poetry run python ./src/process_data.py

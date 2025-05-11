@@ -56,7 +56,7 @@ jobs:
           make format
           
       # Type check the code using mypy
-      - name: Format with black
+      - name: Type check the code
         run: |
           make type-checking
 

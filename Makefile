@@ -34,9 +34,13 @@ build:
 	# build docker image
 	docker build -t ml-project-image -f docker/Dockerfile .
 
-run: build
-	# run a docker container from the ml-project image
-	docker run --name ml-project-container --rm -p 8080:8080 -d ml-project-image
+process: build
+	# Run the process_data.py in the container
+	docker run --name process_data_container -e SCRIPT_TO_RUN=process_data.py ml-project-image
+
+train: build
+	# run the train script
+	docker run -e SCRIPT_TO_RUN=train.py ml-project-image
 
 stop: 
 	# stop the container from running

@@ -118,3 +118,14 @@ jobs:
       - name: list directory
         run: ls -la
 ```
+
+## docker 
+
+The `docker` directory has a Dockerfile that can be used to build and image and run a `train.py` and `process_data.py` script in a container. The directory also contains a `README.md` with more explenation on the files. Note that the `Dockerfile` contains comments for each commands that hopefully makes them sufficiently clear.  
+
+The image can be build using `make build`. 
+
+The train script can be run using `make train`
+
+The process_data script can be run using `make process`
+

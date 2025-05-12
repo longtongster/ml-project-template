@@ -64,15 +64,15 @@ RUN chown -R appuser:appuser /app
 # PYTHONUNBUFFERED ensures Python output is sent straight to the terminal without buffering
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
+ENV SCRIPT_TO_RUN=main.py
 
 # Switch to the non-root user for all subsequent commands
 # This improves security by not running the application as root
 USER appuser
 
 # Define the command that will run when the container starts
-# This uses the exec form of CMD which avoids using a shell
-# It directly runs the Python interpreter on the main.py script
-CMD ["python", "./src/main.py"]
+# This uses a shell to expand the environment variable
+CMD ["sh", "-c", "python ./src/${SCRIPT_TO_RUN}"]
 
 # Uncomment to expose a port if your application has a web interface
 # This maps a port from the container to the host

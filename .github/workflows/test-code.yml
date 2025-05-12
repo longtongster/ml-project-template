@@ -59,7 +59,11 @@ jobs:
       - name: Type check the code
         run: |
           make type-checking
-
+          
+      # Run unit tests with pytest 
+      - name: Unit test with pytest
+        run: |
+          make tests
 
       # Runs a single command using the runners shell
       - name: list directory

@@ -32,21 +32,29 @@ process-data:
 
 build:
 	# build docker image
-	docker build -t wiki-app-image .
+	docker build -t ml-project-image -f docker/Dockerfile .
 
 run: build
-	# run a docker container from the wiki-app image
-	docker run --name wiki-app-container --rm -p 8080:8080 -d wiki-app-image
+	# run a docker container from the ml-project image
+	docker run --name ml-project-container --rm -p 8080:8080 -d ml-project-image
 
 stop: 
 	# stop the container from running
-	docker stop wiki-app-container 
+	docker stop ml-project-container 
 
 deploy:
 	# push the image to ECR
 	aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 891376951737.dkr.ecr.us-east-1.amazonaws.com
-	docker build -t wikipedia/wiki-app .
-	docker tag wikipedia/wiki-app:latest 891376951737.dkr.ecr.us-east-1.amazonaws.com/wikipedia/wiki-app:latest
-	docker push 891376951737.dkr.ecr.us-east-1.amazonaws.com/wikipedia/wiki-app:latest
+	docker build -t ml-project/ml-app -f docker/Dockerfile .
+	docker tag ml-project/ml-app:latest 891376951737.dkr.ecr.us-east-1.amazonaws.com/ml-project/ml-app:latest
+	docker push 891376951737.dkr.ecr.us-east-1.amazonaws.com/ml-project/ml-app:latest
+
+docker-compose-up:
+	# run using docker-compose
+	cd docker && docker-compose up -d
+
+docker-compose-down:
+	# stop and remove containers created by docker-compose
+	cd docker && docker-compose down
 
 all: install lint test deploy

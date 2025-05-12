@@ -41,3 +41,80 @@ For this the `pylint` library is used. In the `Makefile` this is performed via `
 
 -   R: Refactor suggestions (e.g., "too many nested blocks").
 -   C: Convention issues (e.g., naming style not matching PEP8).
+
+## Github Actions
+
+Github actions is used to trigger a CI testing workflow on a push to the main branch on github or on a pull request. It checks out the code, installs python, then poetry, the dependencies using poetry and finally runs a series of tests.
+
+```
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      # install the python version we want to use. NOTE: this is a rather old python version
+      - name: Set up Python 3.10.16
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10.16'
+          
+      # Install pipx 
+      - name: Install pipx (needed for Poetry)
+        run: python -m pip install --user pipx && python -m pipx ensurepath
+
+      # Install poetry which we use for dependency management. 
+      - name: Install Poetry
+        run: pipx install poetry
+
+      # Install the dependencies we need (e.g. pandas, scikit-learn)
+      - name: Install dependencies
+        run: |
+          make install
+
+      # Run the linter to make sure the code is PEP compliant
+      - name: Lint with pylint
+        run: |
+          make lint
+
+      # Format the code using black
+      - name: Format with black
+        run: |
+          make format
+          
+      # Type check the code using mypy
+      - name: Type check the code
+        run: |
+          make type-checking
+          
+      # Run unit tests with pytest 
+      - name: Unit test with pytest
+        run: |
+          make tests
+
+      # Runs a single command using the runners shell
+      - name: list directory
+        run: ls -la
+```

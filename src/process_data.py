@@ -2,7 +2,9 @@ from typing import List, Tuple
 
 import joblib
 import pandas as pd
+from utils import get_logger
 
+from pathlib import Path
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
@@ -118,6 +120,9 @@ if __name__ == "__main__":
     TARGET_COL = "SalePrice"
     FILENAME = "./raw_data/ames_unprocessed_data.csv"
     TEST_SIZE = 0.20
+
+    logger = get_logger(Path(__file__).name)
+    logger.info("Preprocessing data ")
 
     # import the dataset
     df = read_dataset(FILENAME)

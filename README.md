@@ -1,6 +1,7 @@
 # TODO
 
-setup permissions for mounted directories maybe for now via docker compose later via the makefile
+- docker-compose - setup permissions for mounted directories maybe for now via docker compose later via the makefile
+- use logger instead of print statements.
 
 # Introduction 
 

@@ -54,6 +54,13 @@ Github actions is used to trigger a CI testing workflow on a push to the main br
 
 In case the workflow needs certains permissions, repository secrets can be used. These can be created under `settings` then `Secrets and Variables`. In the example github workflow it is shown how a secret can be used.
 
+
+### Environment variables
+
+The workflow file contains and example or a global and job variable
+
+### Workflow file
+
 ```
 # This is a basic workflow to help you get started with Actions
 
@@ -137,3 +144,12 @@ The train script can be run using `make train`
 
 The process_data script can be run using `make process`
 
+## DVC
+
+DVC in general is used data versioning and pipelines. For experimentation MLFlow is normally used.
+
+### DVC pipelines
+
+The dvc pipeline is defined in a `dvc.yaml` file.
+
+### DVC Data versioning

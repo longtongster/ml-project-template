@@ -1,0 +1,23 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python ./src/process_data.py
+    deps:
+    - path: ./raw_data/ames_unprocessed_data.csv
+      hash: md5
+      md5: 355d7a5a6fa74b30e5d2c8cc19d6508b
+      size: 111673
+      isexec: true
+    - path: ./src/process_data.py
+      hash: md5
+      md5: 6068a8b8d302f1220e3025d31da2257c
+      size: 5840
+    outs:
+    - path: ./processed_data/test_processed.csv
+      hash: md5
+      md5: 207225c8eef3ce61b244f28c59c58d4b
+      size: 142247
+    - path: ./processed_data/train_processed.csv
+      hash: md5
+      md5: de1a47208f5e6b53e8c70b49fb6f8671
+      size: 570621

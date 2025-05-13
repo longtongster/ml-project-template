@@ -1,0 +1,9 @@
+stages:
+  preprocess:
+    cmd: python ./src/process_data.py
+    deps:
+    - ./src/process_data.py
+    - ./raw_data/ames_unprocessed_data.csv
+    outs:
+    - ./processed_data/test_processed.csv
+    - ./processed_data/train_processed.csv

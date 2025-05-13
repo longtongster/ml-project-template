@@ -1,3 +1,7 @@
+# TODO
+
+setup permissions for mounted directories maybe for now via docker compose later via the makefile
+
 # Introduction 
 
 A template for an ml project. 

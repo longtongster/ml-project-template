@@ -13,12 +13,21 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# set an environment variable that can be used in the workflow
+env:
+  # Set the value of global environment variable
+  GLOBAL_VARIABLE: global_value
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+  env:
+    # Set the value of local environment variable
+    JOB_VARIABLE: job_value
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -73,3 +82,10 @@ jobs:
       # Runs a single command using the runners shell
       - name: list directory
         run: ls -la
+
+      # print environment variables
+      - name: Print Variables
+        # Write the environment variable whose value is set
+        run: |
+          echo "Global Variable: ${{ env.GLOBAL_VARIABLE }}"
+          echo "Set job Variable: ${{ env.JOB_VARIABLE }}"

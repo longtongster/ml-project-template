@@ -30,15 +30,19 @@ tests:
 process-data:
 	poetry run python ./src/process_data.py
 
+train:
+	# train the model
+	poetry run python ./src/train.py
+
 build:
 	# build docker image
 	docker build -t ml-project-image -f docker/Dockerfile .
 
-process: build
+process-docker: build
 	# Run the process_data.py in the container
 	docker run --name process_data_container -e SCRIPT_TO_RUN=process_data.py ml-project-image
 
-train: build
+train-docker: build
 	# run the train script
 	docker run -e SCRIPT_TO_RUN=train.py ml-project-image
 

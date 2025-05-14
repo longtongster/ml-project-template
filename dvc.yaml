@@ -7,3 +7,11 @@ stages:
     outs:
     - ./processed_data/test_processed.csv
     - ./processed_data/train_processed.csv
+  train:
+    cmd: python ./src/train2.py
+    deps:
+    - ./processed_data/test_processed.csv
+    - ./processed_data/train_processed.csv
+    - ./src/train2.py
+    outs:
+    - ./saved_models/model_pipeline.pkl

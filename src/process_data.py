@@ -1,15 +1,16 @@
+from pathlib import Path
 from typing import List, Tuple
 
 import joblib
 import pandas as pd
-from utils import get_logger
 
-from pathlib import Path
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+from utils import get_logger  # pylint: disable=import-error
 
 
 def read_dataset(filename: str) -> pd.DataFrame:
@@ -126,6 +127,7 @@ if __name__ == "__main__":
 
     # import the dataset
     df = read_dataset(FILENAME)
+    print(df.shape)
 
     # remove target from dataframe to keep the features
     X = df.drop(columns=[TARGET_COL])
@@ -151,14 +153,16 @@ if __name__ == "__main__":
     X_test_processed = process_data(preprocessor, X_test)
 
     # Optional: inspect the first few rows
-    print(X_train_processed.shape)
-    print(X_test_processed.shape)
+    logger.info(f"Shape of X_train_processed {X_train_processed.shape}")
+    logger.info(f"Shape of X_test_processed {X_test_processed.shape}")
 
-    X_train_processed.insert(loc=0, column=TARGET_COL, value=y_train)
+    y_train_reset = y_train.reset_index(drop=True)
+    X_train_processed[TARGET_COL] = y_train_reset
     print("X_train_processed", X_train_processed.shape)
 
-    X_test_processed.insert(loc=0, column=TARGET_COL, value=y_test)
-    print("X_test_processed", X_test_processed.shape)
+    y_test_reset = y_test.reset_index(drop=True)
+    X_test_processed[TARGET_COL] = y_test_reset
+    print(X_test_processed.shape)
 
     # Save preprocessed data
     print("Saving processed train and test datat to `processed_data` directory")

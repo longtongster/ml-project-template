@@ -2,6 +2,7 @@
 
 - docker-compose - setup permissions for mounted directories maybe for now via docker compose later via the makefile
 - use logger instead of print statements.
+- adjust the train.py script such that it takes the processed data as input and creates several outputs
 
 # Introduction 
 
@@ -149,8 +150,12 @@ The process_data script can be run using `make process`
 
 DVC in general is used data versioning and pipelines. For experimentation MLFlow is normally used.
 
+In order to use DVC we need to have a git repository and then initalize a dvc repository using `dvc init`.
+
 ### DVC pipelines
 
 The dvc pipeline is defined in a `dvc.yaml` file.
+
+To run the pipeline execture `dvc repro`
 
 ### DVC Data versioning

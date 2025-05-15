@@ -1,0 +1,18 @@
+# Data paths
+data:
+  train_path: "./processed_data/train_processed.csv"
+  test_path: "./processed_data/test_processed.csv"
+  raw_data: "./raw_data/ames_unprocessed_data.csv"
+
+# Model parameters
+model:
+  target_column: "SalePrice"
+  max_depth: 6
+  random_state: 42
+  cv_folds: 5
+
+# Output paths
+output:
+  model_path: "./saved_models/random_forest_model.pkl"
+  plot_path: "./artifacts/feature_importances.png"
+  preprocessor_path: "./artifacts/preprocessor.pkl"

@@ -3,6 +3,10 @@ stages:
   preprocess:
     cmd: python ./src/process_data.py
     deps:
+    - path: ./config/config.yaml
+      hash: md5
+      md5: 7f649cfa31e3d68ed7b7dd120f146943
+      size: 460
     - path: ./raw_data/ames_unprocessed_data.csv
       hash: md5
       md5: 355d7a5a6fa74b30e5d2c8cc19d6508b
@@ -28,6 +32,10 @@ stages:
   train:
     cmd: python ./src/train.py
     deps:
+    - path: ./config/config.yaml
+      hash: md5
+      md5: 7f649cfa31e3d68ed7b7dd120f146943
+      size: 460
     - path: ./processed_data/test_processed.csv
       hash: md5
       md5: fe28c82dffdd0b98906898e5357ee6f4
@@ -38,13 +46,13 @@ stages:
       size: 570136
     - path: ./src/train.py
       hash: md5
-      md5: 6b6afd558af7e747ba2d2d0d0a0ecb21
-      size: 2927
+      md5: d79604c5485100d0015240f055462f3c
+      size: 7064
     outs:
     - path: ./artifacts/feature_importances.png
       hash: md5
-      md5: bd5a76f43c11cee7363eb82016bf216d
-      size: 180731
+      md5: 5c8fe07427420e84484133605b8c0560
+      size: 178567
     - path: ./saved_models/random_forest_model.pkl
       hash: md5
       md5: e038c9af01ea4319f46e3af3e4c00baa

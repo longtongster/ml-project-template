@@ -4,6 +4,7 @@ stages:
     deps:
     - ./src/process_data.py
     - ./raw_data/ames_unprocessed_data.csv
+    - ./config/config.yaml  # Add this line
     outs:
     - ./processed_data/test_processed.csv
     - ./processed_data/train_processed.csv
@@ -14,6 +15,7 @@ stages:
     - ./processed_data/test_processed.csv
     - ./processed_data/train_processed.csv
     - ./src/train.py
+    - ./config/config.yaml  # Add this line
     outs:
     - ./saved_models/random_forest_model.pkl
     - ./artifacts/feature_importances.png

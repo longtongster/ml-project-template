@@ -1,3 +1,12 @@
+"""
+Module for training a RandomForestRegressor model on the Ames housing dataset.
+
+This module loads preprocessed Ames housing data, trains a RandomForestRegressor model,
+evaluates it using cross-validation and test set, visualizes feature importances,
+and saves the trained model.
+"""
+
+from pathlib import Path
 from typing import Tuple
 
 import joblib
@@ -9,6 +18,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score
 
+from utils import get_logger  # pylint: disable=import-error
+
 TARGET_COL = "SalePrice"
 TRAIN_PATH = "./processed_data/train_processed.csv"
 TEST_PATH = "./processed_data/test_processed.csv"
@@ -16,6 +27,18 @@ MAX_DEPTH = 6
 
 
 def load_dataset(filepath: str, target_col: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Load a dataset from a CSV file and split it into features and target.
+
+    Parameters:
+        filepath (str): Path to the CSV file containing the dataset
+        target_col (str): Name of the target column to predict
+
+    Returns:
+        Tuple[pd.DataFrame, pd.DataFrame]: A tuple containing:
+            - X: DataFrame with feature columns
+            - y: Series with target values
+    """
     df_dataset = pd.read_csv(filepath)
     X = df_dataset.drop(columns=[target_col])
     y = df_dataset[target_col]
@@ -23,6 +46,10 @@ def load_dataset(filepath: str, target_col: str) -> Tuple[pd.DataFrame, pd.DataF
 
 
 if __name__ == "__main__":
+    # create a logger
+    logger = get_logger(Path(__file__).name)
+    logger.info("Start training script")
+
     # load the training data
     X_train, y_train = load_dataset(TRAIN_PATH, TARGET_COL)
     print(X_train.shape)
@@ -31,20 +58,20 @@ if __name__ == "__main__":
     X_test, y_test = load_dataset(TEST_PATH, TARGET_COL)
     print(X_test.shape)
 
-    rf = RandomForestRegressor(max_depth=MAX_DEPTH)
+    rf = RandomForestRegressor(max_depth=MAX_DEPTH, random_state=42)
 
     # Get the accuracy on the training data using cross validation
     cross_val_scores = cross_val_score(rf, X_train, y_train, cv=5, scoring="neg_mean_squared_error")
-    # Print the 10-fold RMSE
-    print("10-fold RMSE: ", np.mean(np.sqrt(np.abs(cross_val_scores))))
+    # Print the 5-fold RMSE
+    print("5-fold RMSE: ", np.mean(np.sqrt(np.abs(cross_val_scores))))
 
-    # Fit the model on the toal training data
+    # Fit the model on the total training data
     rf.fit(X_train, y_train)
 
     # Determine the accuracy on the test dataset
     y_pred = rf.predict(X_test)
-    neg_mse = np.sqrt(mean_squared_error(y_test, y_pred))
-    print("Negative MSE:", neg_mse)
+    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+    print("Negative MSE:", rmse)
 
     data = {"feature": X_train.columns, "importance": rf.feature_importances_}
     df = pd.DataFrame(data).sort_values(by=["importance"])
@@ -57,4 +84,4 @@ if __name__ == "__main__":
 
     # Save the fitted pipeline
     print("save model")
-    joblib.dump(rf, "./saved_models/model_pipeline.pkl")
+    joblib.dump(rf, "./saved_models/random_forest_model.pkl")

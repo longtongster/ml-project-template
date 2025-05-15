@@ -7,6 +7,7 @@ stages:
     outs:
     - ./processed_data/test_processed.csv
     - ./processed_data/train_processed.csv
+    - ./artifacts/preprocessor.pkl
   train:
     cmd: python ./src/train.py
     deps:
@@ -14,4 +15,5 @@ stages:
     - ./processed_data/train_processed.csv
     - ./src/train.py
     outs:
-    - ./saved_models/model_pipeline.pkl
+    - ./saved_models/random_forest_model.pkl
+    - ./artifacts/feature_importances.png

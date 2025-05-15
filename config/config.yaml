@@ -3,6 +3,7 @@ data:
   train_path: "./processed_data/train_processed.csv"
   test_path: "./processed_data/test_processed.csv"
   raw_data: "./raw_data/ames_unprocessed_data.csv"
+  test_size: 0.20
 
 # Model parameters
 model:

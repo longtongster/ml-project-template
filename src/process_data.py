@@ -1,6 +1,6 @@
 from pathlib import Path
-from typing import List, Tuple
-
+from typing import List, Tuple, Dict, Any
+import yaml
 import joblib
 import pandas as pd
 
@@ -11,6 +11,25 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 from utils import get_logger  # pylint: disable=import-error
+
+def load_config(config_path: str = "./config/config.yaml") -> Dict[str, Any]:
+    """
+    Load configuration parameters from a YAML file.
+
+    Parameters:
+        config_path (str): Path to the YAML configuration file
+
+    Returns:
+        dict: Dictionary containing configuration parameters organized by sections
+            such as 'data', 'model', and 'output'
+
+    Raises:
+        FileNotFoundError: If the configuration file doesn't exist
+        yaml.YAMLError: If the configuration file has invalid YAML syntax
+    """
+    with open(config_path, "r", encoding="utf-8") as f:
+        config: Dict[str, Any] = yaml.safe_load(f)
+    return config
 
 
 def read_dataset(filename: str) -> pd.DataFrame:
@@ -45,22 +64,11 @@ def get_cat_num_cols(dataset_df: pd.DataFrame, target_col: str) -> Tuple[List[st
     numerical_columns = dataset_df.select_dtypes(include=["number"]).columns.tolist()
     numerical_columns.remove(target_col)
 
-    # Create a boolean mask for categorical columns
-    # categorical_mask = dataset_df.dtypes == object
-
     # # Get list of categorical column names
     # categorical_columns = dataset_df.columns[categorical_mask].tolist()
-    print("The dataframe has the following categorical columns:")
-    print(categorical_columns)
-
-    # Create a boolean mask for numerical columns
-    # numerical_mask = [not x for x in categorical_mask]
-
-    # numerical_columns = dataset_df.columns[numerical_mask].tolist()
-    # numerical_columns.remove(target_col)
-    print("The dataframe has the following numerical columns")
-    print(numerical_columns)
-
+    logger.debug(f"The dataframe has the following categorical columns: {categorical_columns}")
+    logger.debug(f"The dataframe has the following numerical columns: {numerical_columns}")
+    
     return categorical_columns, numerical_columns
 
 
@@ -78,7 +86,6 @@ def get_data_preprocess_pipeline(feature_columns: List[str], categorical_columns
     differently using pipelines
     """
     # one-hot-encode categorical features
-    print(categorical_columns)
     cat_pipeline = Pipeline([("cat", OneHotEncoder(sparse_output=False, handle_unknown="ignore"))])
 
     # impute and scale numerical features
@@ -93,17 +100,17 @@ def get_data_preprocess_pipeline(feature_columns: List[str], categorical_columns
     return processor
 
 
-def process_data(pipeline: Pipeline, data: pd.DataFrame) -> Pipeline:
+def process_data(pipeline: ColumnTransformer, data: pd.DataFrame) -> pd.DataFrame:
     """
     Transforms the input data using a fitted pipeline and returns a
     DataFrame with processed features and appropriate column names.
 
     Parameters:
-    pipeline: A fitted sklearn ColumnTransformer pipeline
-    data (pd.DataFrame): Input dataframe to transform
+        pipeline (ColumnTransformer): A fitted sklearn ColumnTransformer pipeline
+        data (pd.DataFrame): Input dataframe to transform
 
     Returns:
-    pd.DataFrame: Transformed dataframe with updated feature names
+        pd.DataFrame: Transformed dataframe with updated feature names
     """
     # preprocess the data with fit transform
     X_processed = pipeline.transform(data)
@@ -117,58 +124,90 @@ def process_data(pipeline: Pipeline, data: pd.DataFrame) -> Pipeline:
     return X_processed_df
 
 
-if __name__ == "__main__":
-    TARGET_COL = "SalePrice"
-    FILENAME = "./raw_data/ames_unprocessed_data.csv"
-    TEST_SIZE = 0.20
-
+def main() -> None:
+    """
+    Main function to orchestrate the data preprocessing workflow.
+    
+    This function coordinates:
+    1. Loading the raw dataset
+    2. Splitting into train and test sets
+    3. Identifying categorical and numerical columns
+    4. Creating and fitting preprocessing pipeline
+    5. Transforming train and test data
+    6. Saving processed datasets and pipeline
+    
+    Returns:
+        None
+    """
     logger = get_logger(Path(__file__).name)
-    logger.info("Preprocessing data ")
+    logger.info("Starting data preprocessing")
+    
+    try:
+        # Load configuration
+        config = load_config()
+        target_col = config["model"]["target_column"]
+        train_path = config["data"]["train_path"]
+        test_path = config["data"]["test_path"]
+        random_state = config["model"]["random_state"]
+        filename = config["data"]["raw_data"]
+        test_size = config["data"]["test_size"]
+        preprocessor_path = config["output"]["preprocessor_path"]
+        
+        # Import the dataset
+        logger.info(f"Importing dataset from {filename}")
+        df = read_dataset(filename)
+        logger.debug(f"The raw dataset has the following shape: {df.shape}")
+        
+        # Split features and target
+        X = df.drop(columns=[target_col])
+        y = df[target_col]
+        
+        # Split into train and test sets
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=test_size, random_state=random_state
+        )
+        logger.debug(f"Train features shape: {X_train.shape}, Test features shape: {X_test.shape}")
+        
+        # Get categorical and numerical columns
+        categorical_cols, feature_cols = get_cat_num_cols(df, target_col)
+        
+        # Create and fit preprocessing pipeline
+        preprocessor = get_data_preprocess_pipeline(feature_cols, categorical_cols)
+        preprocessor.fit(X_train)
+        
+        # Transform train and test data
+        logger.info("Preprocessing train and test data")
+        X_train_processed = process_data(preprocessor, X_train)
+        X_test_processed = process_data(preprocessor, X_test)
+        
+        # Add target column back to processed data
+        y_train_reset = y_train.reset_index(drop=True)
+        X_train_processed[target_col] = y_train_reset
+        logger.debug(f"X_train_processed shape: {X_train_processed.shape}")
+        
+        y_test_reset = y_test.reset_index(drop=True)
+        X_test_processed[target_col] = y_test_reset
+        logger.debug(f"X_test_processed shape: {X_test_processed.shape}")
+        
+        # Save processed data
+        logger.info(f"Saving processed train data to {train_path}")
+        pd.DataFrame(X_train_processed).to_csv(train_path, index=False)
+        
+        logger.info(f"Saving processed test data to {test_path}")
+        pd.DataFrame(X_test_processed).to_csv(test_path, index=False)
+        
+        # Save the preprocessor pipeline
+        logger.info(f"Saving the sklearn preprocessing pipeline to {preprocessor_path}")
+        joblib.dump(preprocessor, preprocessor_path)
+        
+        logger.info("Preprocessing completed successfully")
+        
+    except FileNotFoundError as e:
+        logger.error(f"File not found: {e}")
+    except Exception as e:  # pylint: disable=broad-exception-caught
+        logger.error(f"Error during preprocessing: {e}")
 
-    # import the dataset
-    df = read_dataset(FILENAME)
-    print(df.shape)
 
-    # remove target from dataframe to keep the features
-    X = df.drop(columns=[TARGET_COL])
-    # assign target to y
-    y = df[TARGET_COL]
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=TEST_SIZE, random_state=54)
-    print(X_train.shape, X_test.shape)
-
-    # get categorical and numerical columns
-    categorical_cols, feature_cols = get_cat_num_cols(df, TARGET_COL)
-
-    # The preprocessor defines separate steps for categorical and features columns
-    preprocessor = get_data_preprocess_pipeline(feature_cols, categorical_cols)
-
-    # Fit the preprocessor on the training data
-    preprocessor.fit(X_train)
-
-    # get the processed train data
-    X_train_processed = process_data(preprocessor, X_train)
-
-    # get the processed test data
-    X_test_processed = process_data(preprocessor, X_test)
-
-    # Optional: inspect the first few rows
-    logger.info(f"Shape of X_train_processed {X_train_processed.shape}")
-    logger.info(f"Shape of X_test_processed {X_test_processed.shape}")
-
-    y_train_reset = y_train.reset_index(drop=True)
-    X_train_processed[TARGET_COL] = y_train_reset
-    print("X_train_processed", X_train_processed.shape)
-
-    y_test_reset = y_test.reset_index(drop=True)
-    X_test_processed[TARGET_COL] = y_test_reset
-    print(X_test_processed.shape)
-
-    # Save preprocessed data
-    print("Saving processed train and test datat to `processed_data` directory")
-    pd.DataFrame(X_train_processed).to_csv("./processed_data/train_processed.csv", index=False)
-    pd.DataFrame(X_test_processed).to_csv("./processed_data/test_processed.csv", index=False)
-
-    # Save the preprocessor pipeline
-    print("Saving the sklearn preprocessing pipeline to `artifacts`")
-    joblib.dump(preprocessor, "./artifacts/preprocessor.pkl")
+if __name__ == "__main__":
+    logger = get_logger(Path(__file__).name)
+    main()

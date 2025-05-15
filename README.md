@@ -52,6 +52,10 @@ For this the `pylint` library is used. In the `Makefile` this is performed via `
 
 Github actions is used to trigger a CI testing workflow on a push to the main branch on github or on a pull request. It checks out the code, installs python, then poetry, the dependencies using poetry and finally runs a series of tests.
 
+### Create a workflow file
+
+In your reposistory click on `Actions` then type `simple` to get a `simple workflow` can be selected. This can be adjusted to your specific needs.
+
 ### Repo secrets
 
 In case the workflow needs certains permissions, repository secrets can be used. These can be created under `settings` then `Secrets and Variables`. In the example github workflow it is shown how a secret can be used.

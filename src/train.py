@@ -52,18 +52,18 @@ if __name__ == "__main__":
 
     # load the training data
     X_train, y_train = load_dataset(TRAIN_PATH, TARGET_COL)
-    print(X_train.shape)
+    logger.debug(f"The shape of the dataframe with the train dataset: {X_train.shape}")
 
     # Load the test data
     X_test, y_test = load_dataset(TEST_PATH, TARGET_COL)
-    print(X_test.shape)
+    logger.debug(f"The shape of the dataframe with the test dataset: {X_train.shape}")
 
     rf = RandomForestRegressor(max_depth=MAX_DEPTH, random_state=42)
 
     # Get the accuracy on the training data using cross validation
     cross_val_scores = cross_val_score(rf, X_train, y_train, cv=5, scoring="neg_mean_squared_error")
     # Print the 5-fold RMSE
-    print("5-fold RMSE: ", np.mean(np.sqrt(np.abs(cross_val_scores))))
+    logger.info("The RMSE with cv=5 using the training data:  {np.mean(np.sqrt(np.abs(cross_val_scores)))}")
 
     # Fit the model on the total training data
     rf.fit(X_train, y_train)
@@ -71,10 +71,10 @@ if __name__ == "__main__":
     # Determine the accuracy on the test dataset
     y_pred = rf.predict(X_test)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-    print("Negative MSE:", rmse)
+    logger.info(f"The RMSE on the hold out (test) dataset: {rmse:.1f}")
 
     data = {"feature": X_train.columns, "importance": rf.feature_importances_}
-    df = pd.DataFrame(data).sort_values(by=["importance"])
+    df = pd.DataFrame(data)#.sort_values(by=["importance"], ascending=True)
     plt.figure(figsize=(10, 10))
     plt.barh(y=df["feature"], width=df["importance"])
     plt.xlabel("Mean Feature Importance")
@@ -83,5 +83,5 @@ if __name__ == "__main__":
     plt.savefig("./artifacts/feature_importances.png")  # Save the figure as a PNG image
 
     # Save the fitted pipeline
-    print("save model")
+    logger.info("Save model the model to `saved_models` directory")
     joblib.dump(rf, "./saved_models/random_forest_model.pkl")

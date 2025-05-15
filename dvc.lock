@@ -13,6 +13,10 @@ stages:
       md5: 875d04b44ac2490752a9f1a2b9636228
       size: 6147
     outs:
+    - path: ./artifacts/preprocessor.pkl
+      hash: md5
+      md5: dd8bdceeb5bc23e4b59265a1f7ee2499
+      size: 5406
     - path: ./processed_data/test_processed.csv
       hash: md5
       md5: fe28c82dffdd0b98906898e5357ee6f4
@@ -34,10 +38,14 @@ stages:
       size: 570136
     - path: ./src/train.py
       hash: md5
-      md5: fc21113d62d3b195dca9c2f7426e18cf
-      size: 2022
+      md5: 6b6afd558af7e747ba2d2d0d0a0ecb21
+      size: 2927
     outs:
-    - path: ./saved_models/model_pipeline.pkl
+    - path: ./artifacts/feature_importances.png
       hash: md5
-      md5: 869c3a6c6c06b0300aeac674aa8c8419
-      size: 835857
+      md5: bd5a76f43c11cee7363eb82016bf216d
+      size: 180731
+    - path: ./saved_models/random_forest_model.pkl
+      hash: md5
+      md5: e038c9af01ea4319f46e3af3e4c00baa
+      size: 828369

@@ -163,3 +163,32 @@ The dvc pipeline is defined in a `dvc.yaml` file.
 To run the pipeline execture `dvc repro`.If nothing changed in certains `stages` in the pipeline DVC will not execute them. A full calculation of the pipeline can be forces usig `dvc repro --force".
 
 ### DVC Data versioning
+
+In preperation of storing data in a remoe s3 location it is recommended to start an AWs sandbox. Then create an IAM user with S3 fullaccess that has programmatic access.
+Then create a bucket `dvc-bucket-svw-1`. Then use `aws configure` to create the credentials locally. Test the setup with `aws s3 ls` which should return the created bucket. 
+
+To add a datafile to be tracked by dvc execute `dvc add raw_data/ams_unprocessed_data.cvs`.
+
+Then to track the versioning with dvc ` git add raw_data/ames_unprocessed_data.csv.dvc raw_data/.gitignore`
+
+You can see what is tracked using  `cat raw_data/ames_unprocessed_data.csv.dvc`
+
+A remote is folder or cloud provider where the actual data is stored. A remote can be created using
+
+`dvc remote add AWSremote s3://dvc-bucket-svw-1`
+
+This results in an entry in the `.dvc/config` file:
+
+```
+['remote "awsremote"']
+    url = s3://dvc-bucket-svw-1
+```
+
+with `dvc remote list` you can list the available remotes.
+
+local remotes can also be setup for rapid prototyping 
+
+`dvc remote add myLocalremote /tmp/dvc`
+
+You can also set the a default repo by using `-d` e.g., `dvc remote add -d AWSremote s3://dvc-bucket-svw-1`. 
+With the default set commands such `dvc push` will use the default remote.

@@ -16,6 +16,7 @@ seaborn = "^0.13.2"
 notebook = "*"
 xgboost = "^3.0.0"
 requests = "^2.32.3"
+dvc-s3 = "*"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"

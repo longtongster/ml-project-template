@@ -1,0 +1,6 @@
+outs:
+- md5: 355d7a5a6fa74b30e5d2c8cc19d6508b
+  size: 111673
+  isexec: true
+  hash: md5
+  path: ames_unprocessed_data.csv

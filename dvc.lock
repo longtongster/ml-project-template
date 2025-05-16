@@ -14,8 +14,8 @@ stages:
       isexec: true
     - path: ./src/process_data.py
       hash: md5
-      md5: 270e7fa3a662c5ac3eafa5820bba3ff5
-      size: 7868
+      md5: 07344a9b510d288d585b149bf91e5e47
+      size: 7677
     outs:
     - path: ./artifacts/preprocessor.pkl
       hash: md5

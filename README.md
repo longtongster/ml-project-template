@@ -160,6 +160,6 @@ In order to use DVC we need to have a git repository and then initalize a dvc re
 
 The dvc pipeline is defined in a `dvc.yaml` file.
 
-To run the pipeline execture `dvc repro`
+To run the pipeline execture `dvc repro`.If nothing changed in certains `stages` in the pipeline DVC will not execute them. A full calculation of the pipeline can be forces usig `dvc repro --force".
 
 ### DVC Data versioning

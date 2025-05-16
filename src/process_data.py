@@ -36,14 +36,13 @@ def load_config(config_path: str = "./config/config.yaml") -> Dict[str, Any]:
 
 def read_dataset(filename: str) -> pd.DataFrame:
     """
-    Reads the raw data file and returns pandas dataframe
-    Target column values are expected in binary format with Yes/No values
+    Reads the raw data file and returns pandas dataframe.
 
     Parameters:
-    filename (str): raw data filename
+        filename (str): Path to the CSV file containing the dataset
 
     Returns:
-    pd.Dataframe: Target encoded dataframe
+        pd.DataFrame: DataFrame containing the loaded dataset
     """
     dataset_df = pd.read_csv(filename)
 
@@ -52,15 +51,16 @@ def read_dataset(filename: str) -> pd.DataFrame:
 
 def get_cat_num_cols(dataset_df: pd.DataFrame, target_col: str) -> Tuple[List[str], List[str]]:
     """
-    Takes a dataframe as input and return a list with the categorical
-    and numerical columns.
+    Identifies categorical and numerical columns in a DataFrame.
 
     Parameters:
-    df (pd.DataFrame): pandas dataframe
-    target_col (str): name of target column
+        dataset_df (pd.DataFrame): DataFrame to analyze for column types
+        target_col (str): Name of the target column to exclude from numerical columns
 
     Returns:
-    A list of string with categorical columsn and one with numerical column names
+        Tuple[List[str], List[str]]: A tuple containing:
+            - categorical_columns: List of categorical column names
+            - numerical_columns: List of numerical column names
     """
     categorical_columns = dataset_df.select_dtypes(include=["object", "category"]).columns.tolist()
     numerical_columns = dataset_df.select_dtypes(include=["number"]).columns.tolist()
@@ -75,12 +75,12 @@ def get_data_preprocess_pipeline(feature_columns: List[str], categorical_columns
     features and imputation + scaling to numerical features.
 
     Parameters:
-    feature_columns (List[str]): List of numerical feature column names
-    categorical_columns (List[str]): List of categorical feature column names
+        feature_columns (List[str]): List of numerical feature column names
+        categorical_columns (List[str]): List of categorical feature column names
 
     Returns:
-    ColumnTransformer: A transformer that preprocesses numerical and categorical features
-    differently using pipelines
+        ColumnTransformer: A transformer that preprocesses numerical and categorical features
+        differently using pipelines
     """
     # one-hot-encode categorical features
     cat_pipeline = Pipeline([("cat", OneHotEncoder(sparse_output=False, handle_unknown="ignore"))])
@@ -140,7 +140,6 @@ def main() -> None:
     logger.info("Starting data preprocessing")
 
     try:
-
         # Load configuration
         config = load_config()
         target_col = config["model"]["target_column"]
@@ -189,10 +188,10 @@ def main() -> None:
 
         # Save processed data
         logger.info(f"Saving processed train data to {train_path}")
-        pd.DataFrame(X_train_processed).to_csv(train_path, index=False)
+        X_train_processed.to_csv(train_path, index=False)
 
         logger.info(f"Saving processed test data to {test_path}")
-        pd.DataFrame(X_test_processed).to_csv(test_path, index=False)
+        X_test_processed.to_csv(test_path, index=False)
 
         # Save the preprocessor pipeline
         logger.info(f"Saving the sklearn preprocessing pipeline to {preprocessor_path}")

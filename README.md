@@ -192,3 +192,7 @@ local remotes can also be setup for rapid prototyping
 
 You can also set the a default repo by using `-d` e.g., `dvc remote add -d AWSremote s3://dvc-bucket-svw-1`. 
 With the default set commands such `dvc push` will use the default remote.
+
+Use the `-r` flag as to push to a different location than the default one:
+
+`dvc push -r myAWSremote data.csv`

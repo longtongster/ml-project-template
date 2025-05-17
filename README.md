@@ -62,7 +62,7 @@ In case the workflow needs certains permissions, repository secrets can be used.
 
 ### predefined uses
 
-There are quite some different features that can be used in github actions. such as checkout the repo using `actions/checkout@v4`. There are also features for continuous machine learning (cml) and dvc (`iterative/setup-dvc@v3`). After that you can `run: dvc repro`. There are quite some advanced examples (such as rendering plots in comments) in the `references` directory slides.
+There are quite some different features that can be used in github actions. such as checkout the repo using `actions/checkout@v4`. There are also features for continuous machine learning (cml) and dvc (`iterative/setup-dvc@v3`). After that you can `run: dvc repro`. There are quite some advanced examples (such as rendering and comparing plots in comments) in the `references` directory slides.
 
 ### Environment variables
 

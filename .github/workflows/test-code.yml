@@ -86,3 +86,11 @@ jobs:
         run: |
           echo "Global Variable: ${{ env.GLOBAL_VARIABLE }}"
           echo "Job Variable: ${{ env.JOB_VARIABLE }}"
+
+      # Setup DVC GitHub Action
+      - name: Setup DVC
+        uses: iterative/setup-dvc@v1
+          
+      # Run DVC pipeline
+      - name: Run DVC pipeline
+        run: dvc repro

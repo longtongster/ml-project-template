@@ -1,4 +1,2 @@
-[core]
-    remote = awsremote
 ['remote "awsremote"']
     url = s3://dvc-bucket-svw-1

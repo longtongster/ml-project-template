@@ -1,6 +1,0 @@
-outs:
-- md5: f843f1f0b801b5824469856b3cebe5dc
-  size: 111596
-  isexec: true
-  hash: md5
-  path: ames_unprocessed_data.csv

@@ -60,6 +60,9 @@ In your reposistory click on `Actions` then type `simple` to get a `simple workf
 
 In case the workflow needs certains permissions, repository secrets can be used. These can be created under `settings` then `Secrets and Variables`. In the example github workflow it is shown how a secret can be used.
 
+### predefined uses
+
+There are quite some different features that can be used in github actions. such as checkout the repo using `actions/checkout@v4`. There are also features for continuous machine learning (cml) and dvc (`iterative/setup-dvc@v3`). After that you can `run: dvc repro`. There are quite some advanced examples (such as rendering plots in comments) in the `references` directory slides.
 
 ### Environment variables
 
@@ -170,7 +173,7 @@ You can see the DAG by entering `dvc dag`
 
 To run a specific stage from the `dvc.yaml` e.g. `preprocess` one can execute `dvc repro preprocess`.
 
-You can also define a `metrics` argument that refers to a metrics file `metrics.json`. With `dvc show metrics` you can see the metrics.
+You can also define a `metrics` argument that refers to a metrics file `metrics.json`. With `dvc metrics show` you can see the metrics. You can then change a hyperparameter, rerun the pipeline and use `dvc metrics diff` to see the difference in metrics.
 
 ### DVC Data versioning
 

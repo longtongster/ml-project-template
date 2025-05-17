@@ -156,6 +156,8 @@ DVC in general is used data versioning and pipelines. For experimentation MLFlow
 
 In order to use DVC we need to have a git repository and then initalize a dvc repository using `dvc init`.
 
+To see what is tracked by dvc you can execute `dvc list . --dvc-only`
+
 ### DVC pipelines
 
 The dvc pipeline is defined in a `dvc.yaml` file.
@@ -163,6 +165,8 @@ The dvc pipeline is defined in a `dvc.yaml` file.
 To run the pipeline execture `dvc repro`.If nothing changed in certains `stages` in the pipeline DVC will not execute them. A full calculation of the pipeline can be forces usig `dvc repro --force".
 
 You can see the DAG by entering `dvc dag`
+
+**important** - the dvc pipeline only tracks what is mentioned under `outs` in the dvc.yaml file. The other files e.g. `.py` files, dvc.yaml, dvc.lock, `.dvc` are being tracked by git. With `dvc push` all files in the `outs` section are pushed to the remote data repo. This means by default the `raw_data` (not in outs) directory is not tracked by dvc. 
 
 ### DVC Data versioning
 

@@ -19,3 +19,9 @@ stages:
     outs:
     - ./saved_models/random_forest_model.pkl
     - ./artifacts/feature_importances.png
+    metrics:
+    - ./artifacts/metrics.json:
+        cache: false
+
+    # plots:
+    #- ./artifacts/feature_importances.png

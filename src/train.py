@@ -8,7 +8,7 @@ and saves the trained model.
 
 from pathlib import Path
 from typing import Any, Dict, Tuple
-
+import json
 import joblib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -184,7 +184,10 @@ def main() -> None:
         rf = train_model(X_train, y_train, MAX_DEPTH, RANDOM_STATE)
 
         # Evaluate model
-        evaluate_model(rf, X_test, y_test)
+        rmse = evaluate_model(rf, X_test, y_test)
+        with open("./artifacts/metrics.json", "w", encoding="utf-8") as f:
+            metrics = {"rmse": rmse}
+            json.dump(metrics, f)
 
         # Visualize feature importance
         create_feature_importance_plot(rf, X_train)

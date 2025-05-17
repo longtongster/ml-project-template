@@ -168,6 +168,10 @@ You can see the DAG by entering `dvc dag`
 
 **important** - the dvc pipeline only tracks what is mentioned under `outs` in the dvc.yaml file. The other files e.g. `.py` files, dvc.yaml, dvc.lock, `.dvc` are being tracked by git. With `dvc push` all files in the `outs` section are pushed to the remote data repo. This means by default the `raw_data` (not in outs) directory is not tracked by dvc. 
 
+To run a specific stage from the `dvc.yaml` e.g. `preprocess` one can execute `dvc repro preprocess`.
+
+You can also define a `metrics` argument that refers to a metrics file `metrics.json`. With `dvc show metrics` you can see the metrics.
+
 ### DVC Data versioning
 
 In preperation of storing data in a remoe s3 location it is recommended to start an AWs sandbox. Then create an IAM user with S3 fullaccess that has programmatic access.

@@ -8,7 +8,7 @@ data:
 # Model parameters
 model:
   target_column: "SalePrice"
-  max_depth: 6
+  max_depth: 7
   random_state: 42
   cv_folds: 5
 

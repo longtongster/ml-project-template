@@ -1,7 +1,7 @@
 schema: '2.0'
 stages:
   preprocess:
-    cmd: python ./src/process_data.py
+    cmd: poetry run python ./src/process_data.py
     deps:
     - path: ./config/config.yaml
       hash: md5
@@ -30,7 +30,7 @@ stages:
       md5: 56c3f4dc3ea052b2f35887535428a51e
       size: 570322
   train:
-    cmd: python ./src/train.py
+    cmd: poetry run python ./src/train.py
     deps:
     - path: ./config/config.yaml
       hash: md5

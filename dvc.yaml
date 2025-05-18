@@ -1,6 +1,6 @@
 stages:
   preprocess:
-    cmd: python ./src/process_data.py
+    cmd: poetry run python ./src/process_data.py
     deps:
     - ./src/process_data.py
     - ./raw_data/ames_unprocessed_data.csv
@@ -10,7 +10,7 @@ stages:
     - ./processed_data/train_processed.csv
     - ./artifacts/preprocessor.pkl
   train:
-    cmd: python ./src/train.py
+    cmd: poetry run python ./src/train.py
     deps:
     - ./processed_data/test_processed.csv
     - ./processed_data/train_processed.csv

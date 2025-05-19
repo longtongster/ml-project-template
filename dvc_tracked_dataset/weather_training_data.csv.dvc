@@ -1,0 +1,5 @@
+outs:
+- md5: 2968a54f969d7b1e1bfe6c8346bc2c4a
+  size: 10105884
+  hash: md5
+  path: weather_training_data.csv

@@ -157,9 +157,11 @@ The process_data script can be run using `make process`
 
 DVC in general is used data versioning and pipelines. For experimentation MLFlow is normally used.
 
+To check that dvc is installed execute `dvc version`. Otherwise install it using `poetry add` or add it in the `pyproject.toml` file (see above).
+
 In order to use DVC we need to have a git repository and then initalize a dvc repository using `dvc init`.
 
-To see what is tracked by dvc you can execute `dvc list . --dvc-only`
+To see what is tracked by dvc you can execute `dvc list . --dvc-only`. You can also run `find .dvc/cache/ -type f` to see what files are currently in the dvc cache.
 
 ### DVC pipelines
 
@@ -209,6 +211,12 @@ With the default set commands such `dvc push` will use the default remote.
 Use the `-r` flag as to push to a different location than the default one:
 
 `dvc push -r myAWSremote data.csv`
+
+To stop tracing a file with dvc execute:
+
+`dvc remove dvc_tracked_dataset/weather_training_data.csv.dvc `
+
+please remark it is the `.dvc` that is no longer tracked. 
 
 ### Tracking Data Changes
 

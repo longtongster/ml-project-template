@@ -169,7 +169,7 @@ The dvc pipeline is defined in a `dvc.yaml` file.
 
 To run the pipeline execture `dvc repro`.If nothing changed in certains `stages` in the pipeline DVC will not execute them. A full calculation of the pipeline can be forces usig `dvc repro --force".
 
-You can see the DAG by entering `dvc dag`
+You can see the DAG by entering `dvc dag`. This gives only the stages. Use `dvc dag --outs` to plot the dag of the outs sections fo the dag.
 
 **important** - the dvc pipeline only tracks what is mentioned under `outs` in the dvc.yaml file. The other files e.g. `.py` files, dvc.yaml, dvc.lock, `.dvc` are being tracked by git. With `dvc push` all files in the `outs` section are pushed to the remote data repo. This means by default the `raw_data` (not in outs) directory is not tracked by dvc. 
 
@@ -205,7 +205,7 @@ local remotes can also be setup for rapid prototyping
 
 `dvc remote add --local myLocalremote /tmp/dvc`
 
-You can also set the a default repo by using `-d` e.g., `dvc remote add -d AWSremote s3://dvc-bucket-svw-1`. 
+You can also set the a default repo by using `-d` e.g., `dvc remote add -d AWSremote s3://dvc-bucket-svw-1`.
 With the default set commands such `dvc push` will use the default remote.
 
 Use the `-r` flag as to push to a different location than the default one:
@@ -217,6 +217,18 @@ To stop tracing a file with dvc execute:
 `dvc remove dvc_tracked_dataset/weather_training_data.csv.dvc `
 
 please remark it is the `.dvc` that is no longer tracked. 
+
+to clear the `cache` and get a clear workspace use `dcv gc -w`.
+
+Use `dvc pull` to download rmote data from the remote datastorage in the working space. 
+
+Use `dvc fetch` to update the cache without changing the workspace content.
+
+You can checkout a specific version of the data using the following steps
+
+`git checkout <commit_has|tag|branch>`
+
+to get the specific version of the `.dvc` version. Retrieve data with MD5 specied in `.dvc` file use `dvc checkout <target>`.
 
 ### Tracking Data Changes
 

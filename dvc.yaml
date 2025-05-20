@@ -23,5 +23,6 @@ stages:
     - ./artifacts/metrics.json:
         cache: false
 
+    # see more on datacamp or in the reference slides
     # plots:
     #- ./artifacts/feature_importances.png
